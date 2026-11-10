@@ -1,0 +1,315 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-28T14:15:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_sarwiri",
+      "_type": "workspace",
+      "name": "Sarwiri Tours API",
+      "description": "Colección completa de pruebas para la API REST de Sarwiri Tours - Entrega 2"
+    },
+    {
+      "_id": "env_sarwiri_base",
+      "_type": "environment",
+      "parentId": "wrk_sarwiri",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "token": "",
+        "token_admin": "",
+        "token_visitante": ""
+      }
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_sarwiri",
+      "name": "1. Autenticación (HU08)"
+    },
+    {
+      "_id": "req_caso1",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Caso 1 - Registro usuario válido (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/registro",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nombre\": \"Usuario Demostración\",\n  \"correo\": \"demo@sarwiri.cl\",\n  \"contrasena\": \"clave123\"\n}"
+      },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "req_caso2",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Caso 2 - Registro con correo ya existente (409)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/registro",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nombre\": \"Admin Duplicado\",\n  \"correo\": \"admin@sarwiri.cl\",\n  \"contrasena\": \"admin123\"\n}"
+      },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "req_caso3_admin",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Caso 3 - Login Administrador correcto (200 + token)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"correo\": \"admin@sarwiri.cl\",\n  \"contrasena\": \"admin123\"\n}"
+      },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "req_caso3_user",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Caso 3b - Login Visitante correcto (200 + token)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"correo\": \"visitante@correo.cl\",\n  \"contrasena\": \"clave123\"\n}"
+      },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "req_caso4",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Caso 4 - Login contraseña incorrecta (401)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"correo\": \"admin@sarwiri.cl\",\n  \"contrasena\": \"contrasena_invalida\"\n}"
+      },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "fld_tours",
+      "_type": "request_group",
+      "parentId": "wrk_sarwiri",
+      "name": "2. Tours (HU01, HU02, HU03, HU04, HU10)"
+    },
+    {
+      "_id": "req_tours_todos",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Listar todos los tours (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/tours"
+    },
+    {
+      "_id": "req_caso5",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Caso 5 - Filtrar por palabra clave 'sandboard' (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/tours?q=sandboard"
+    },
+    {
+      "_id": "req_caso6",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Caso 6 - Filtrar por cantidad de personas (12 personas) (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/tours?personas=12"
+    },
+    {
+      "_id": "req_tour_detalle",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Detalle de tour existente ID 1 (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/tours/1"
+    },
+    {
+      "_id": "req_caso7",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Caso 7 - Consultar tour inexistente (404)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/tours/999"
+    },
+    {
+      "_id": "req_disponibilidad",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Disponibilidad de cupos por fecha (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/tours/1/disponibilidad?fecha=2026-11-20"
+    },
+    {
+      "_id": "req_caso12",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Caso 12 - Crear tour como visitante (403)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/tours",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nombre\": \"Tour No Permitido\",\n  \"categoria\": \"Aventura\",\n  \"duracion\": \"2 horas\",\n  \"precio\": 20000,\n  \"max_personas\": 10,\n  \"descripcion\": \"Intento no autorizado\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token_visitante }}" }
+      ]
+    },
+    {
+      "_id": "req_caso13_crear",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Caso 13a - Crear tour como administrador (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/tours",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nombre\": \"Laguna Roja y Camiña\",\n  \"categoria\": \"Aventura\",\n  \"duracion\": \"12 horas\",\n  \"precio\": 65000,\n  \"max_personas\": 8,\n  \"imagen\": \"img/laguna-roja.jpg\",\n  \"descripcion\": \"Excursión hacia las míticas aguas coloradas de la Laguna Roja en la precordillera.\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token_admin }}" }
+      ]
+    },
+    {
+      "_id": "req_caso13_modificar",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Caso 13b - Modificar tour como administrador (200)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/tours/1",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"precio\": 28000,\n  \"duracion\": \"3.5 horas\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token_admin }}" }
+      ]
+    },
+    {
+      "_id": "req_caso13_eliminar",
+      "_type": "request",
+      "parentId": "fld_tours",
+      "name": "Caso 13c - Eliminar tour como administrador (200)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/tours/7",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token_admin }}" }
+      ]
+    },
+    {
+      "_id": "fld_reservas",
+      "_type": "request_group",
+      "parentId": "wrk_sarwiri",
+      "name": "3. Reservas (HU09, HU10)"
+    },
+    {
+      "_id": "req_caso8",
+      "_type": "request",
+      "parentId": "fld_reservas",
+      "name": "Caso 8 - Crear reserva con sesión iniciada (201)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/reservas",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tourId\": 1,\n  \"fecha\": \"2026-11-20\",\n  \"personas\": 2,\n  \"nombre\": \"Ana Pérez\",\n  \"correo\": \"ana@correo.cl\",\n  \"telefono\": \"+56 9 1234 5678\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token_visitante }}" }
+      ]
+    },
+    {
+      "_id": "req_caso9",
+      "_type": "request",
+      "parentId": "fld_reservas",
+      "name": "Caso 9 - Crear reserva sin token (401)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/reservas",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tourId\": 1,\n  \"fecha\": \"2026-11-20\",\n  \"personas\": 2,\n  \"nombre\": \"Sin Token\",\n  \"correo\": \"sin@token.cl\"\n}"
+      },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "req_caso10",
+      "_type": "request",
+      "parentId": "fld_reservas",
+      "name": "Caso 10 - Reservar más personas que el máximo (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/reservas",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tourId\": 1,\n  \"fecha\": \"2026-12-05\",\n  \"personas\": 25,\n  \"nombre\": \"Ana Pérez\",\n  \"correo\": \"ana@correo.cl\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token_visitante }}" }
+      ]
+    },
+    {
+      "_id": "req_caso11",
+      "_type": "request",
+      "parentId": "fld_reservas",
+      "name": "Caso 11 - Reservar con fecha anterior a hoy (400)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/reservas",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tourId\": 1,\n  \"fecha\": \"2020-05-10\",\n  \"personas\": 2,\n  \"nombre\": \"Ana Pérez\",\n  \"correo\": \"ana@correo.cl\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token_visitante }}" }
+      ]
+    },
+    {
+      "_id": "req_mis_reservas",
+      "_type": "request",
+      "parentId": "fld_reservas",
+      "name": "Consultar mis reservas (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/reservas/mias",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token_visitante }}" }
+      ]
+    },
+    {
+      "_id": "req_todas_reservas",
+      "_type": "request",
+      "parentId": "fld_reservas",
+      "name": "Listar todas las reservas como admin (200)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/reservas",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token_admin }}" }
+      ]
+    },
+    {
+      "_id": "req_caso14",
+      "_type": "request",
+      "parentId": "fld_reservas",
+      "name": "Caso 14 - Confirmar reserva como administrador (200)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/api/reservas/1/estado",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"estado\": \"confirmada\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token_admin }}" }
+      ]
+    }
+  ]
+}
